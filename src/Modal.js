@@ -3,11 +3,31 @@ const defaultOptions = {
   className: 'fade-in-down'
 }
 
+function transitionEnd() {
+  var el = document.createElement('div')
+
+  var transEndEventNames = {
+    WebkitTransition: 'webkitTransitionEnd',
+    MozTransition: 'transitionend',
+    OTransition: 'oTransitionEnd otransitionend',
+    transition: 'transitionend'
+  }
+
+  for (var name in transEndEventNames) {
+    if (el.style[name] !== undefined) {
+      return transEndEventNames[name]
+    }
+  }
+
+  return false
+}
+
 export default class Modal {
   constructor(options = {}) {
     this.options = { ...defaultOptions, ...options }
     this.modal = null
     this.overlay = null
+    this.transitionEnd = transitionEnd()
   }
 
   bindEvents() {
@@ -42,12 +62,18 @@ export default class Modal {
     this.modal.className = this.modal.className.replace(' modal-open', '')
     this.overlay.className = this.overlay.className.replace(' modal-open', '')
 
-    this.modal.addEventListener('transitionend', () => {
+    // ie <= 9
+    if (!this.transitionEnd) {
       this.modal.parentNode.removeChild(this.modal)
-    })
-
-    this.overlay.addEventListener('transitionend', () => {
       this.overlay.parentNode.removeChild(this.overlay)
-    })
+    } else {
+      this.modal.addEventListener(this.transitionEnd, () => {
+        this.modal.parentNode.removeChild(this.modal)
+      })
+
+      this.overlay.addEventListener(this.transitionEnd, () => {
+        this.overlay.parentNode.removeChild(this.overlay)
+      })
+    }
   }
 }
