@@ -7,8 +7,8 @@ const postcss = require('rollup-plugin-postcss')
 const cssnano = require('cssnano')
 
 const targets = {
-  umd: 'dist/hljModal.js',
-  min: 'dist/hljModal.min.js'
+  umd: 'dist/js/hljModal.js',
+  min: 'dist/js/hljModal.min.js'
 }
 
 const getPostcssPlugin = format => {
