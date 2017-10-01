@@ -1,4 +1,5 @@
 const defaultOptions = {
+  closeBtn: true,
   className: 'fade-in-down'
 }
 
