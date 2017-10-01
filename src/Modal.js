@@ -6,16 +6,16 @@ const defaultOptions = {
 }
 
 function transitionEnd() {
-  var el = document.createElement('div')
+  const el = document.createElement('div')
 
-  var transEndEventNames = {
+  const transEndEventNames = {
     WebkitTransition: 'webkitTransitionEnd',
     MozTransition: 'transitionend',
     OTransition: 'oTransitionEnd otransitionend',
     transition: 'transitionend'
   }
 
-  for (var name in transEndEventNames) {
+  for (let name in transEndEventNames) {
     if (el.style[name] !== undefined) {
       return transEndEventNames[name]
     }

@@ -6,9 +6,14 @@ const license = require('rollup-plugin-license')
 const postcss = require('rollup-plugin-postcss')
 const cssnano = require('cssnano')
 
-const targets = {
+const jsTargets = {
   umd: 'dist/js/hljModal.js',
   min: 'dist/js/hljModal.min.js'
+}
+
+const cssTargets = {
+  umd: 'dist/css/hljModal.css',
+  min: 'dist/css/hljModal.min.css'
 }
 
 const getPostcssPlugin = format => {
@@ -24,8 +29,7 @@ const getPostcssPlugin = format => {
 
   const postcssPlugin = postcss({
     plugins: postcssPluginList,
-    extract:
-      format === 'min' ? 'dist/css/hljModal.min.css' : 'dist/css/hljModal.css',
+    extract: cssTargets[format],
     extensions: ['.css']
   })
 
@@ -60,7 +64,7 @@ function build(format) {
 
   return rollup(inputOptions).then(bundle => {
     bundle.write({
-      file: targets[format],
+      file: jsTargets[format],
       format: 'umd',
       name: 'HljModal'
     })
