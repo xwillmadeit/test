@@ -15,8 +15,28 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var defaultOptions = {
+  closeBtn: true,
   className: 'fade-in-down'
 };
+
+function transitionEnd() {
+  var el = document.createElement('div');
+
+  var transEndEventNames = {
+    WebkitTransition: 'webkitTransitionEnd',
+    MozTransition: 'transitionend',
+    OTransition: 'oTransitionEnd otransitionend',
+    transition: 'transitionend'
+  };
+
+  for (var name in transEndEventNames) {
+    if (el.style[name] !== undefined) {
+      return transEndEventNames[name];
+    }
+  }
+
+  return false;
+}
 
 var Modal = function () {
   function Modal() {
@@ -27,6 +47,7 @@ var Modal = function () {
     this.options = _extends({}, defaultOptions, options);
     this.modal = null;
     this.overlay = null;
+    this.transitionEnd = transitionEnd();
   }
 
   _createClass(Modal, [{
@@ -68,13 +89,19 @@ var Modal = function () {
       this.modal.className = this.modal.className.replace(' modal-open', '');
       this.overlay.className = this.overlay.className.replace(' modal-open', '');
 
-      this.modal.addEventListener('transitionend', function () {
-        _this.modal.parentNode.removeChild(_this.modal);
-      });
+      // ie <= 9
+      if (!this.transitionEnd) {
+        this.modal.parentNode.removeChild(this.modal);
+        this.overlay.parentNode.removeChild(this.overlay);
+      } else {
+        this.modal.addEventListener(this.transitionEnd, function () {
+          _this.modal.parentNode.removeChild(_this.modal);
+        });
 
-      this.overlay.addEventListener('transitionend', function () {
-        _this.overlay.parentNode.removeChild(_this.overlay);
-      });
+        this.overlay.addEventListener(this.transitionEnd, function () {
+          _this.overlay.parentNode.removeChild(_this.overlay);
+        });
+      }
     }
   }]);
 
